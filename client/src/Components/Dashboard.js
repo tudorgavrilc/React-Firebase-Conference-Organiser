@@ -87,7 +87,7 @@ function Dashboard() {
                     variant={selectedRole === 'reviewer' ? 'warning' : 'outline-warning'}
                     onClick={() => handleRoleSelection('reviewer')}
                 >
-                    Reviewer jj
+                    Reviewer
                 </Button>
             </div>
 
