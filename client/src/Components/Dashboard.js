@@ -12,7 +12,22 @@ function Dashboard() {
   const [selectedRole, setSelectedRole] = useState(null);
   const [verificationCode, setVerificationCode] = useState("");
   const { currentUser, logout } = useAuth();
-  const [conferences, setConferences] = useState([]);
+  const [conferences, setConferences] = useState([
+    {
+      id: 1,
+      name: "Conference 1",
+      articles: [
+        {
+          id: 1,
+          type: "Research Paper",
+          content: "Lorem Ipsum",
+          reviews: [], // Array to store reviewer feedback
+        },
+        // ... other articles
+      ],
+    },
+    // ... other conferences
+  ]);
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -23,6 +38,54 @@ function Dashboard() {
       navigate("/login");
     } catch {
       setError("Failed to log out");
+    }
+  }
+
+  function handleReviewArticle({ conference, articleId, reviewType }) {
+    const conferenceIndex = conferences.findIndex(
+      (conf) => conf.id === conference
+    );
+
+    if (conferenceIndex !== -1) {
+      const updatedConferences = [...conferences];
+      const updatedConference = { ...updatedConferences[conferenceIndex] };
+
+      const articleIndex = updatedConference.articles.findIndex(
+        (article) => article.id === articleId
+      );
+
+      if (articleIndex !== -1) {
+        const updatedArticle = { ...updatedConference.articles[articleIndex] };
+
+        // Check if the reviewer has already provided feedback
+        const existingReview = updatedArticle.reviews.find(
+          (review) => review.reviewer === currentUser.email
+        );
+
+        if (existingReview) {
+          console.log("You have already provided feedback for this article.");
+        } else {
+          updatedArticle.reviews.push({
+            reviewer: currentUser.email,
+            type: reviewType,
+          });
+
+          updatedConference.articles[articleIndex] = updatedArticle;
+          updatedConferences[conferenceIndex] = updatedConference;
+
+          setConferences(updatedConferences);
+
+          console.log("Review submitted:", {
+            conference,
+            articleId,
+            reviewType,
+          });
+        }
+      } else {
+        console.error("Article not found for the provided review.");
+      }
+    } else {
+      console.error("Conference not found for the provided review.");
     }
   }
 
@@ -53,13 +116,15 @@ function Dashboard() {
 
     if (conferenceIndex !== -1) {
       const updatedConferences = [...conferences];
-
       const updatedConference = { ...updatedConferences[conferenceIndex] };
 
       if (!updatedConference.articles) {
-        updatedConference.articles = [article];
+        updatedConference.articles = [{ ...article, reviews: [] }];
       } else {
-        updatedConference.articles = [...updatedConference.articles, article];
+        updatedConference.articles = [
+          ...updatedConference.articles,
+          { ...article, reviews: [] },
+        ];
       }
 
       updatedConferences[conferenceIndex] = updatedConference;
@@ -138,6 +203,39 @@ function Dashboard() {
           onAddArticle={handleAddArticle}
           manageConferences={conferences}
         />
+      )}
+
+      {selectedRole === "reviewer" && (
+        <>
+          <ReviewerPanel
+            conferences={conferences}
+            onReviewArticle={handleReviewArticle}
+          />
+
+          {/* Render conferences for the reviewer to see */}
+          <div>
+            <h2>Conferences for Reviewers</h2>
+            {conferences.map((conference) => (
+              <div key={conference.id}>
+                <h3>{conference.name}</h3>
+                <ul>
+                  {conference.articles.map((article) => (
+                    <li key={article.id}>
+                      {article.type} - {article.content}
+                      <ul>
+                        {article.reviews.map((review, index) => (
+                          <li key={index}>
+                            Reviewer: {review.reviewer}, Type: {review.type}
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </>
   );

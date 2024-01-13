@@ -1,96 +1,79 @@
+import React, { useState } from "react";
 
+function ReviewerPanel({ conferences, onReviewArticle }) {
+  const [selectedConference, setSelectedConference] = useState("");
+  const [selectedArticle, setSelectedArticle] = useState("");
+  const [reviewType, setReviewType] = useState("");
 
-import React, { useState } from 'react';
-import { Card, Button, ListGroup, Form } from 'react-bootstrap';
+  const handleReviewArticle = () => {
+    if (selectedConference && selectedArticle && reviewType) {
+      onReviewArticle({
+        conference: selectedConference,
+        articleId: selectedArticle,
+        reviewType: reviewType,
+      });
+      setSelectedConference("");
+      setSelectedArticle("");
+      setReviewType("");
+    }
+  };
 
-function ReviewerPanel({ conferences, onSubmitReview }) {
-    const [selectedConference, setSelectedConference] = useState(null);
-    const [selectedArticle, setSelectedArticle] = useState(null);
-    const [feedback, setFeedback] = useState('');
+  return (
+    <div>
+      <h2>Reviewer Panel</h2>
+      <div>
+        <label>Select Conference: </label>
+        <select
+          onChange={(e) => setSelectedConference(e.target.value)}
+          value={selectedConference}
+        >
+          <option value="" disabled>
+            Select a conference
+          </option>
+          {conferences.map((conference) => (
+            <option key={conference.id} value={conference.id}>
+              {conference.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-    const handleConferenceSelection = (conference) => {
-        setSelectedConference(conference);
-        setSelectedArticle(null);
-        setFeedback('');
-    };
+      <div>
+        <label>Select Article: </label>
+        <select
+          onChange={(e) => setSelectedArticle(e.target.value)}
+          value={selectedArticle}
+        >
+          <option value="" disabled>
+            Select an article
+          </option>
+          {conferences
+            .find((conference) => conference.id === selectedConference)
+            ?.articles.map((article) => (
+              <option key={article.id} value={article.id}>
+                {article.type}
+              </option>
+            ))}
+        </select>
+      </div>
 
-    const handleArticleSelection = (article) => {
-        setSelectedArticle(article);
-        setFeedback('');
-    };
+      <div>
+        <label>Review Type: </label>
+        <select
+          onChange={(e) => setReviewType(e.target.value)}
+          value={reviewType}
+        >
+          <option value="" disabled>
+            Select review type
+          </option>
+          <option value="like">Like</option>
+          <option value="dislike">Dislike</option>
+        </select>
+      </div>
 
-    const handleFeedbackChange = (event) => {
-        setFeedback(event.target.value);
-    };
-
-    const handleFeedbackSubmit = () => {
-        if (selectedConference && selectedArticle && feedback.trim() !== '') {
-            // Apelați funcția de gestionare a feedback-ului din Dashboard.js
-            onSubmitReview(feedback);
-
-            // Resetați starea pentru a permite adăugarea altor feedback-uri
-            setSelectedArticle(null);
-            setFeedback('');
-        }
-    };
-
-    return (
-        <Card>
-            <Card.Body>
-                <h2 className='text-center mt-2'>Reviewer Panel</h2>
-
-                {/* Afișează lista de conferințe */}
-                <h3>Conferințe disponibile:</h3>
-                <ListGroup>
-                    {conferences.map(conference => (
-                        <ListGroup.Item
-                            key={conference.id}
-                            action
-                            onClick={() => handleConferenceSelection(conference)}
-                        >
-                            {conference.name}
-                        </ListGroup.Item>
-                    ))}
-                </ListGroup>
-
-                {/* Afișează articolele pentru conferința selectată */}
-                {selectedConference && (
-                    <>
-                        <h3>Articole pentru conferința: {selectedConference.name}</h3>
-                        <ListGroup>
-                            {selectedConference.articles.map(article => (
-                                <ListGroup.Item
-                                    key={article.id}
-                                    action
-                                    onClick={() => handleArticleSelection(article)}
-                                >
-                                    {article.title}
-                                </ListGroup.Item>
-                            ))}
-                        </ListGroup>
-                    </>
-                )}
-
-                {/* Afișează formularul de feedback pentru articolul selectat */}
-                {selectedArticle && (
-                    <Form className="mt-3">
-                        <Form.Group controlId="feedbackForm">
-                            <Form.Label>Feedback pentru articolul "{selectedArticle.title}":</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                value={feedback}
-                                onChange={handleFeedbackChange}
-                            />
-                        </Form.Group>
-                        <Button variant="primary" onClick={handleFeedbackSubmit}>
-                            Trimite Feedback
-                        </Button>
-                    </Form>
-                )}
-            </Card.Body>
-        </Card>
-    );
+      <button onClick={handleReviewArticle}>Submit Review</button>
+    </div>
+  );
 }
 
 export default ReviewerPanel;

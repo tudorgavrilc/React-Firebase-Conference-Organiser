@@ -1,3 +1,4 @@
+// Inside AuthorPanel.js
 import React, { useState } from "react";
 import { Card, Button, Form } from "react-bootstrap";
 
@@ -32,9 +33,10 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
               <option value="" disabled>
                 Select a conference
               </option>
-              {manageConferences.map((conference) => (
-                <option key={conference} value={conference}>
-                  {conference}
+              {/* Map over manageConferences to render conference options */}
+              {Object.values(manageConferences).map((conference) => (
+                <option key={conference.id} value={conference.id}>
+                  {conference.name}
                 </option>
               ))}
             </Form.Control>

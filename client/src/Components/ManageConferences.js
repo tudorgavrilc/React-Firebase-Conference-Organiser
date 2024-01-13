@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+// Inside ManageConferences.js
+import React, { useState } from "react";
 
 const ManageConferences = ({ conferences, onChange }) => {
-  const [newConference, setNewConference] = useState('');
+  const [newConference, setNewConference] = useState("");
 
   const handleAddConference = () => {
     if (!conferences) {
-      onChange([newConference]);
+      onChange([
+        { id: new Date().getTime(), name: newConference, articles: [] },
+      ]);
     } else {
-      onChange([...conferences, newConference]);
+      onChange([
+        ...conferences,
+        { id: new Date().getTime(), name: newConference, articles: [] },
+      ]);
     }
-    setNewConference('');
+    setNewConference("");
   };
 
   const handleDeleteConference = (conference) => {
@@ -29,14 +35,17 @@ const ManageConferences = ({ conferences, onChange }) => {
         <button onClick={handleAddConference}>Add Conference</button>
       </div>
       <ul>
-                {Array.isArray(conferences) &&
-                    conferences.map((conference, index) => (
-                        <li key={index}>
-                            {conference}{' '}
-                            <button onClick={() => handleDeleteConference(conference)}>Delete</button>
-                        </li>
-                    ))}
-            </ul>
+        {/* Map over conferences to render conference items */}
+        {Array.isArray(conferences) &&
+          conferences.map((conference, index) => (
+            <li key={conference.id}>
+              {conference.name}{" "}
+              <button onClick={() => handleDeleteConference(conference)}>
+                Delete
+              </button>
+            </li>
+          ))}
+      </ul>
     </div>
   );
 };
