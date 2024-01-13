@@ -63,13 +63,13 @@ function Dashboard() {
 
   function handleAddArticle(article) {
     const conferenceIndex = conferences.findIndex(
-      (conference) => conference.id === article.conference
+      (conference) => conference.id === article.conferenceId
     );
-  
+
     if (conferenceIndex !== -1) {
       const updatedConferences = [...conferences];
       const updatedConference = { ...updatedConferences[conferenceIndex] };
-  
+
       if (!updatedConference.articles) {
         updatedConference.articles = [{ ...article, reviews: [] }];
       } else {
@@ -78,17 +78,20 @@ function Dashboard() {
           { ...article, reviews: [] },
         ];
       }
-  
+
       updatedConferences[conferenceIndex] = updatedConference;
-  
+
       setConferences(updatedConferences);
-  
+
       console.log("Article added:", article);
     } else {
       console.error("Conference not found for the added article.");
     }
+
+    function updateConferences(updatedConferences) {
+      setConferences(updatedConferences);
+    }
   }
-  
 
   return (
     <>
@@ -155,6 +158,7 @@ function Dashboard() {
         <AuthorPanel
           onAddArticle={handleAddArticle}
           manageConferences={conferences}
+          updateConferences={handleManageConferencesChange}
         />
       )}
 
