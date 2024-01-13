@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Conferences from './Conferences'; 
 import ManageConferences from './ManageConferences'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AuthorPanel from './AuthorPanel';
@@ -131,7 +130,6 @@ function handleAddArticle(article) {
 
             {selectedRole === 'organizer' && (
                 <>
-                    <Conferences />
                     <ManageConferences conferences={conferences} onChange={handleManageConferencesChange} />
                 </>
             )}
