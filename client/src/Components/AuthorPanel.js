@@ -8,22 +8,17 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
   const [articleContent, setArticleContent] = useState("");
 
   const handleAddArticle = () => {
-    // Verifică dacă selectedConference este o valoare validă
-    if (selectedConference) {
-      // Include un array gol pentru reviews în articolul adăugat
-      onAddArticle({
-        conference: selectedConference,
-        type: articleType,
-        content: articleContent,
-        reviews: [], // Inițializează cu un array gol pentru reviews
-      });
+    // Include an empty array for reviews in the added article
+    onAddArticle({
+      conference: selectedConference,
+      type: articleType,
+      content: articleContent,
+      reviews: [], // Initialize with an empty array for reviews
+    });
 
-      setSelectedConference("");
-      setArticleType("");
-      setArticleContent("");
-    } else {
-      console.error("Select a valid conference before adding an article.");
-    }
+    setSelectedConference("");
+    setArticleType("");
+    setArticleContent("");
   };
 
   return (
@@ -41,7 +36,7 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
               <option value="" disabled>
                 Select a conference
               </option>
-              {/* Folosește Object.values pentru a obține un array din obiect */}
+              {/* Map over manageConferences to render conference options */}
               {Object.values(manageConferences).map((conference) => (
                 <option key={conference.id} value={conference.id}>
                   {conference.name}
