@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import Conferences from './Conferences'; 
 import ManageConferences from './ManageConferences'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AuthorPanel from './AuthorPanel';
+import ReviewerPanel from './ReviewerPanel';
 
 function Dashboard() {
     const [error, setError] = useState('');
@@ -44,6 +46,36 @@ function Dashboard() {
     function handleManageConferencesChange(updatedConferences) {
         setConferences(updatedConferences);
     }
+
+    
+function handleAddArticle(article) {
+   
+    const conferenceIndex = conferences.findIndex(conference => conference.id === article.conference);
+
+    if (conferenceIndex !== -1) {
+        
+        const updatedConferences = [...conferences];
+
+       
+        const updatedConference = { ...updatedConferences[conferenceIndex] };
+
+        
+        if (!updatedConference.articles) {
+            updatedConference.articles = [article];
+        } else {
+            updatedConference.articles = [...updatedConference.articles, article];
+        }
+
+        updatedConferences[conferenceIndex] = updatedConference;
+
+        setConferences(updatedConferences);
+
+        console.log('Article added:', article);
+    } else {
+        console.error('Conference not found for the added article.');
+    }
+}
+
 
     return (
         <>
@@ -102,6 +134,10 @@ function Dashboard() {
                     <Conferences />
                     <ManageConferences conferences={conferences} onChange={handleManageConferencesChange} />
                 </>
+            )}
+
+            {selectedRole === 'author' && (
+                <AuthorPanel conferences={conferences} onAddArticle={handleAddArticle} />
             )}
         </>
     );
