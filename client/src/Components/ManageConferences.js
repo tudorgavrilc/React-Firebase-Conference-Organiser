@@ -29,14 +29,14 @@ const ManageConferences = ({ conferences, onChange }) => {
         <button onClick={handleAddConference}>Add Conference</button>
       </div>
       <ul>
-        {Array.isArray(conferences) &&
-          conferences.map((conference, index) => (
-            <li key={index}>
-              {conference}{' '}
-              <button onClick={() => handleDeleteConference(conference)}>Delete</button>
-            </li>
-          ))}
-      </ul>
+                {Array.isArray(conferences) &&
+                    conferences.map((conference, index) => (
+                        <li key={index}>
+                            {conference}{' '}
+                            <button onClick={() => handleDeleteConference(conference)}>Delete</button>
+                        </li>
+                    ))}
+            </ul>
     </div>
   );
 };
