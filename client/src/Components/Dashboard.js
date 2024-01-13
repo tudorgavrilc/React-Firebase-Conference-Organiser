@@ -41,54 +41,6 @@ function Dashboard() {
     }
   }
 
-  function handleReviewArticle({ conference, articleId, reviewType }) {
-    const conferenceIndex = conferences.findIndex(
-      (conf) => conf.id === conference
-    );
-
-    if (conferenceIndex !== -1) {
-      const updatedConferences = [...conferences];
-      const updatedConference = { ...updatedConferences[conferenceIndex] };
-
-      const articleIndex = updatedConference.articles.findIndex(
-        (article) => article.id === articleId
-      );
-
-      if (articleIndex !== -1) {
-        const updatedArticle = { ...updatedConference.articles[articleIndex] };
-
-        // Check if the reviewer has already provided feedback
-        const existingReview = updatedArticle.reviews.find(
-          (review) => review.reviewer === currentUser.email
-        );
-
-        if (existingReview) {
-          console.log("You have already provided feedback for this article.");
-        } else {
-          updatedArticle.reviews.push({
-            reviewer: currentUser.email,
-            type: reviewType,
-          });
-
-          updatedConference.articles[articleIndex] = updatedArticle;
-          updatedConferences[conferenceIndex] = updatedConference;
-
-          setConferences(updatedConferences);
-
-          console.log("Review submitted:", {
-            conference,
-            articleId,
-            reviewType,
-          });
-        }
-      } else {
-        console.error("Article not found for the provided review.");
-      }
-    } else {
-      console.error("Conference not found for the provided review.");
-    }
-  }
-
   function handleRoleSelection(role) {
     if (role === "organizer" && verificationCode === "1234") {
       setError("");
@@ -207,10 +159,7 @@ function Dashboard() {
 
       {selectedRole === "reviewer" && (
         <>
-          <ReviewerPanel
-            conferences={conferences}
-            onReviewArticle={handleReviewArticle}
-          />
+          <ReviewerPanel conferences={conferences} />
 
           {/* Render conferences for the reviewer to see */}
           <div>
@@ -222,13 +171,6 @@ function Dashboard() {
                   {conference.articles.map((article) => (
                     <li key={article.id}>
                       {article.type} - {article.content}
-                      <ul>
-                        {article.reviews.map((review, index) => (
-                          <li key={index}>
-                            Reviewer: {review.reviewer}, Type: {review.type}
-                          </li>
-                        ))}
-                      </ul>
                     </li>
                   ))}
                 </ul>
