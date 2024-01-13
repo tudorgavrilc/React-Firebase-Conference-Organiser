@@ -8,7 +8,7 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
   const [articleContent, setArticleContent] = useState("");
 
   const handleAddArticle = () => {
-    // Include an empty array for reviews in the added article
+    console.log("Selected conference:", selectedConference);
     onAddArticle({
       conference: selectedConference,
       type: articleType,
