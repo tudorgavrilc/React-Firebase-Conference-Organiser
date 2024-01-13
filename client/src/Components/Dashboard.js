@@ -65,11 +65,11 @@ function Dashboard() {
     const conferenceIndex = conferences.findIndex(
       (conference) => conference.id === article.conference
     );
-
+  
     if (conferenceIndex !== -1) {
       const updatedConferences = [...conferences];
       const updatedConference = { ...updatedConferences[conferenceIndex] };
-
+  
       if (!updatedConference.articles) {
         updatedConference.articles = [{ ...article, reviews: [] }];
       } else {
@@ -78,16 +78,17 @@ function Dashboard() {
           { ...article, reviews: [] },
         ];
       }
-
+  
       updatedConferences[conferenceIndex] = updatedConference;
-
+  
       setConferences(updatedConferences);
-
+  
       console.log("Article added:", article);
     } else {
       console.error("Conference not found for the added article.");
     }
   }
+  
 
   return (
     <>
