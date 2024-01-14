@@ -97,6 +97,34 @@ function Dashboard() {
       console.error("Conference not found for the added article.");
     }
   }
+
+  function handleReviewArticle(reviewData) {
+    const { conference: selectedConferenceId, articleId, reviewType } = reviewData;
+
+    
+    const updatedConferences = conferences.map((conference) => {
+        if (conference.id === selectedConferenceId) {
+            
+            const updatedArticles = conference.articles.map((article) => {
+                if (article.id === articleId) {
+                    
+                    if (reviewType === "like") {
+                        article.likes = (article.likes || 0) + 1;
+                    } else if (reviewType === "dislike") {
+                        article.dislikes = (article.dislikes || 0) + 1;
+                    }
+                }
+                return article;
+            });
+
+            return { ...conference, articles: updatedArticles };
+            }
+            return conference;
+        });
+
+        // Actualizează starea conferințelor
+        setConferences(updatedConferences);
+    }
   
 
   return (
@@ -168,29 +196,30 @@ function Dashboard() {
       )}
 
       {selectedRole === "reviewer" && (
-        <>
-          <ReviewerPanel conferences={conferences} />
+                <>
+                    <ReviewerPanel conferences={conferences} onReviewArticle={handleReviewArticle} />
 
-          {/* Render conferences for the reviewer to see */}
-          <div>
-            <h2>Conferences for Reviewers</h2>
-            {conferences.map((conference) => (
-              <div key={conference.id}>
-                <h3>{conference.name}</h3>
-                <ul>
-                  {conference.articles.map((article) => (
-                    <li key={article.id}>
-                      {article.type} - {article.content}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+                    {/* Render conferences for the reviewer to see */}
+                    <div>
+                        <h2>Conferences for Reviewers</h2>
+                        {conferences.map((conference) => (
+                            <div key={conference.id}>
+                                <h3>{conference.name}</h3>
+                                <ul>
+                                    {conference.articles.map((article) => (
+                                        <li key={article.id}>
+                                            {article.type} - {article.content}{" "}
+                                            Likes: {article.likes || 0}, Dislikes: {article.dislikes || 0}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
         </>
-      )}
-    </>
-  );
+    );
 }
 
 export default Dashboard;

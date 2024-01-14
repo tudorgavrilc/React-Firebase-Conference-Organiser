@@ -11,16 +11,29 @@ function ReviewerPanel({ conferences, onReviewArticle }) {
 
     const handleReviewArticle = () => {
         if (selectedConference && selectedArticle && reviewType) {
+            // Găsește articolul selectat în toate articolele
+            const selectedArticleObj = allArticles.find(article => article.id === selectedArticle);
+    
+            // Actualizează numărul de like-uri și dislike-uri în funcție de tipul de recenzie
+            if (reviewType === "like") {
+                selectedArticleObj.likes = (selectedArticleObj.likes || 0) + 1;
+            } else if (reviewType === "dislike") {
+                selectedArticleObj.dislikes = (selectedArticleObj.dislikes || 0) + 1;
+            }
+    
+            // Invoke the callback function to update the state in Dashboard component
             onReviewArticle({
                 conference: selectedConference,
                 articleId: selectedArticle,
                 reviewType: reviewType,
             });
+    
             setSelectedConference("");
             setSelectedArticle("");
             setReviewType("");
         }
     };
+    
 
     return (
         <div>
