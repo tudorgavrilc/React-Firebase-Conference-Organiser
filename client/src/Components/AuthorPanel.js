@@ -13,7 +13,9 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
       conference: selectedConference,
       type: articleType,
       content: articleContent,
-      reviews: [], // Initialize with an empty array for reviews
+      reviews: [],
+      likes: 0,
+      dislikes: 0, // Initialize with an empty array for reviews
     });
 
     setSelectedConference("");

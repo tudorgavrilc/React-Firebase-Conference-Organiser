@@ -6,6 +6,8 @@ import ManageConferences from "./ManageConferences";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AuthorPanel from "./AuthorPanel";
 import ReviewerPanel from "./ReviewerPanel";
+import { v4 as uuidv4 } from 'uuid';
+
 
 function Dashboard() {
   const [error, setError] = useState("");
@@ -21,7 +23,9 @@ function Dashboard() {
           id: 1,
           type: "Research Paper",
           content: "Lorem Ipsum",
-          reviews: [], // Array to store reviewer feedback
+          reviews: [],
+          likes: 0,
+          dislikes: 0 // Array to store reviewer feedback
         },
         // ... other articles
       ],
@@ -62,70 +66,58 @@ function Dashboard() {
   }
 
   function handleAddArticle(article) {
-    console.log("Selected conference ID:", article.conference);
+    // Generate a unique ID for the new article
+    const newArticle = { ...article, id: uuidv4(), reviews: [] };
+
     const conferenceIndex = conferences.findIndex(
-      (conference) => conference.id == article.conference
+        (conference) => conference.id == newArticle.conference
     );
-  
+
     if (conferenceIndex !== -1) {
-      const updatedConferences = [...conferences];
-      const updatedConference = { ...updatedConferences[conferenceIndex] };
-  
-      if (!updatedConference.articles) {
-        updatedConference.articles = [{ ...article, reviews: [] }];
-      } else {
-        updatedConference.articles = [
-          ...updatedConference.articles,
-          { ...article, reviews: [] },
-        ];
-      }
-  
-      updatedConferences[conferenceIndex] = updatedConference;
-  
-      console.log("Original conferences array:", conferences);
-      console.log("Conference index:", conferenceIndex);
-      console.log("Updated conference object before modification:", updatedConference);
-  
-      setConferences(updatedConferences);
-  
-      console.log("Updated conference object after modification:", updatedConference);
-      console.log("Updated conferences array after modification:", updatedConferences);
-  
-      console.log("Article added:", article);
+        const updatedConferences = [...conferences];
+        const updatedConference = { ...updatedConferences[conferenceIndex] };
+
+        if (!updatedConference.articles) {
+            updatedConference.articles = [newArticle];
+        } else {
+            updatedConference.articles = [...updatedConference.articles, newArticle];
+        }
+
+        updatedConferences[conferenceIndex] = updatedConference;
+        setConferences(updatedConferences);
     } else {
-      console.log("Conferences in handleAddArticle:", conferences);
-      console.error("Conference not found for the added article.");
+        console.error("Conference not found for the added article.");
     }
-  }
+}
 
   function handleReviewArticle(reviewData) {
     const { conference: selectedConferenceId, articleId, reviewType } = reviewData;
 
-    
-    const updatedConferences = conferences.map((conference) => {
-        if (conference.id === selectedConferenceId) {
-            
-            const updatedArticles = conference.articles.map((article) => {
-                if (article.id === articleId) {
-                    
-                    if (reviewType === "like") {
-                        article.likes = (article.likes || 0) + 1;
-                    } else if (reviewType === "dislike") {
-                        article.dislikes = (article.dislikes || 0) + 1;
-                    }
-                }
-                return article;
-            });
 
-            return { ...conference, articles: updatedArticles };
+    const updatedConferences = conferences.map((conference) => {
+      if (conference.id === selectedConferenceId) {
+
+        const updatedArticles = conference.articles.map((article) => {
+          if (article.id === articleId) {
+
+            if (reviewType === "like") {
+              article.likes = (article.likes || 0) + 1;
+            } else if (reviewType === "dislike") {
+              article.dislikes = (article.dislikes || 0) + 1;
             }
-            return conference;
+          }
+          return article;
         });
 
-        // Actualizează starea conferințelor
-        setConferences(updatedConferences);
-    }
-  
+        return { ...conference, articles: updatedArticles };
+      }
+      return conference;
+    });
+
+    // Actualizează starea conferințelor
+    setConferences(updatedConferences);
+  }
+
 
   return (
     <>
@@ -196,30 +188,30 @@ function Dashboard() {
       )}
 
       {selectedRole === "reviewer" && (
-                <>
-                    <ReviewerPanel conferences={conferences} onReviewArticle={handleReviewArticle} />
+        <>
+          <ReviewerPanel conferences={conferences} onReviewArticle={handleReviewArticle} />
 
-                    {/* Render conferences for the reviewer to see */}
-                    <div>
-                        <h2>Conferences for Reviewers</h2>
-                        {conferences.map((conference) => (
-                            <div key={conference.id}>
-                                <h3>{conference.name}</h3>
-                                <ul>
-                                    {conference.articles.map((article) => (
-                                        <li key={article.id}>
-                                            {article.type} - {article.content}{" "}
-                                            Likes: {article.likes || 0}, Dislikes: {article.dislikes || 0}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
-                </>
-            )}
+          {/* Render conferences for the reviewer to see */}
+          <div>
+            <h2>Conferences for Reviewers</h2>
+            {conferences.map((conference) => (
+              <div key={conference.id}>
+                <h3>{conference.name}</h3>
+                <ul>
+                  {conference.articles.map((article) => (
+                    <li key={article.id}>
+                      {article.type} - {article.content}{" "}
+                      Likes: {article.likes || 0}, Dislikes: {article.dislikes || 0}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </>
-    );
+      )}
+    </>
+  );
 }
 
 export default Dashboard;

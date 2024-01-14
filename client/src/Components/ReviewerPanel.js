@@ -11,28 +11,40 @@ function ReviewerPanel({ conferences, onReviewArticle }) {
 
     const handleReviewArticle = () => {
         if (selectedConference && selectedArticle && reviewType) {
+            console.log("Selected conference:", selectedConference);
+            console.log("Selected article:", selectedArticle);
+    
             // Găsește articolul selectat în toate articolele
-            const selectedArticleObj = allArticles.find(article => article.id === selectedArticle);
+            const selectedArticleObj = allArticles.find(article => article.id == selectedArticle);
     
-            // Actualizează numărul de like-uri și dislike-uri în funcție de tipul de recenzie
-            if (reviewType === "like") {
-                selectedArticleObj.likes = (selectedArticleObj.likes || 0) + 1;
-            } else if (reviewType === "dislike") {
-                selectedArticleObj.dislikes = (selectedArticleObj.dislikes || 0) + 1;
+            console.log("All articles:", allArticles);
+            console.log("Selected article object:", selectedArticleObj);
+    
+            if (selectedArticleObj) {
+                // Actualizează numărul de like-uri și dislike-uri în funcție de tipul de recenzie
+                if (reviewType === "like") {
+                    selectedArticleObj.likes += 1;
+                } else if (reviewType === "dislike") {
+                    selectedArticleObj.dislikes += 1;
+                }
+    
+                // Invoke the callback function to update the state in the Dashboard component
+                onReviewArticle({
+                    conference: selectedConference,
+                    articleId: selectedArticle,
+                    reviewType: reviewType,
+                });
+    
+                setSelectedConference("");
+                setSelectedArticle("");
+                setReviewType("");
+            } else {
+                console.error("Selected article not found.");
             }
-    
-            // Invoke the callback function to update the state in Dashboard component
-            onReviewArticle({
-                conference: selectedConference,
-                articleId: selectedArticle,
-                reviewType: reviewType,
-            });
-    
-            setSelectedConference("");
-            setSelectedArticle("");
-            setReviewType("");
         }
     };
+    
+    
     
 
     return (
