@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,14 @@ import AuthorPanel from "./AuthorPanel";
 import ReviewerPanel from "./ReviewerPanel";
 import { v4 as uuidv4 } from 'uuid';
 
+function saveToLocalStorage(data) {
+  localStorage.setItem("conferencesData", JSON.stringify(data));
+}
+
+function loadFromLocalStorage() {
+  const savedData = localStorage.getItem("conferencesData");
+  return savedData ? JSON.parse(savedData) : [];
+}
 
 function Dashboard() {
   const [error, setError] = useState("");
@@ -61,7 +69,13 @@ function Dashboard() {
 
   function handleManageConferencesChange(updatedConferences) {
     setConferences(updatedConferences);
+    saveToLocalStorage(updatedConferences);
   }
+
+  useEffect(() => {
+    const loadedData = loadFromLocalStorage();
+    setConferences(loadedData);
+  }, []);
 
   function handleAddArticle(article) {
     const newArticle = { ...article, id: uuidv4(), reviews: [] };
