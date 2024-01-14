@@ -5,7 +5,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './Dashboard'
 import Login from './Login'
-
+import '../global.css';
 function App() {
 
 
