@@ -1,4 +1,3 @@
-// Inside ManageConferences.js
 import React, { useState } from "react";
 
 const ManageConferences = ({ conferences, onChange }) => {
@@ -35,7 +34,6 @@ const ManageConferences = ({ conferences, onChange }) => {
         <button onClick={handleAddConference}>Add Conference</button>
       </div>
       <ul>
-        {/* Map over conferences to render conference items */}
         {Array.isArray(conferences) &&
           conferences.map((conference, index) => (
             <li key={conference.id}>

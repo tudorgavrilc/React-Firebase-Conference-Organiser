@@ -25,12 +25,10 @@ function Dashboard() {
           content: "Lorem Ipsum",
           reviews: [],
           likes: 0,
-          dislikes: 0 // Array to store reviewer feedback
+          dislikes: 0
         },
-        // ... other articles
       ],
     },
-    // ... other conferences
   ]);
   const navigate = useNavigate();
 
@@ -66,7 +64,6 @@ function Dashboard() {
   }
 
   function handleAddArticle(article) {
-    // Generate a unique ID for the new article
     const newArticle = { ...article, id: uuidv4(), reviews: [] };
 
     const conferenceIndex = conferences.findIndex(
@@ -114,7 +111,6 @@ function Dashboard() {
       return conference;
     });
 
-    // Actualizează starea conferințelor
     setConferences(updatedConferences);
   }
 
@@ -191,7 +187,6 @@ function Dashboard() {
         <>
           <ReviewerPanel conferences={conferences} onReviewArticle={handleReviewArticle} />
 
-          {/* Render conferences for the reviewer to see */}
           <div>
             <h2>Conferences for Reviewers</h2>
             {conferences.map((conference) => (

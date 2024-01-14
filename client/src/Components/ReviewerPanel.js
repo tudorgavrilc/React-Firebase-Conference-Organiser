@@ -1,4 +1,3 @@
-// Inside ReviewerPanel.js
 import React, { useState } from "react";
 
 function ReviewerPanel({ conferences, onReviewArticle }) {
@@ -6,7 +5,6 @@ function ReviewerPanel({ conferences, onReviewArticle }) {
     const [selectedArticle, setSelectedArticle] = useState("");
     const [reviewType, setReviewType] = useState("");
 
-    // Compile a list of all articles from all conferences
     const allArticles = conferences.flatMap((conference) => conference.articles);
 
     const handleReviewArticle = () => {
@@ -14,21 +12,18 @@ function ReviewerPanel({ conferences, onReviewArticle }) {
             console.log("Selected conference:", selectedConference);
             console.log("Selected article:", selectedArticle);
     
-            // Găsește articolul selectat în toate articolele
             const selectedArticleObj = allArticles.find(article => article.id == selectedArticle);
     
             console.log("All articles:", allArticles);
             console.log("Selected article object:", selectedArticleObj);
     
             if (selectedArticleObj) {
-                // Actualizează numărul de like-uri și dislike-uri în funcție de tipul de recenzie
                 if (reviewType === "like") {
                     selectedArticleObj.likes += 1;
                 } else if (reviewType === "dislike") {
                     selectedArticleObj.dislikes += 1;
                 }
     
-                // Invoke the callback function to update the state in the Dashboard component
                 onReviewArticle({
                     conference: selectedConference,
                     articleId: selectedArticle,

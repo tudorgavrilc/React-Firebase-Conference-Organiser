@@ -1,4 +1,3 @@
-// Inside AuthorPanel.js
 import React, { useState } from "react";
 import { Card, Button, Form } from "react-bootstrap";
 
@@ -15,7 +14,7 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
       content: articleContent,
       reviews: [],
       likes: 0,
-      dislikes: 0, // Initialize with an empty array for reviews
+      dislikes: 0,
     });
 
     setSelectedConference("");
@@ -38,7 +37,6 @@ function AuthorPanel({ onAddArticle, manageConferences }) {
               <option value="" disabled>
                 Select a conference
               </option>
-              {/* Map over manageConferences to render conference options */}
               {Object.values(manageConferences).map((conference) => (
                 <option key={conference.id} value={conference.id}>
                   {conference.name}
